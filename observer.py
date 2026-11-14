@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 
 
-# Интерфейс наблюдателя
+# Observer interface
 class Observer(ABC):
 
     @abstractmethod
@@ -11,7 +11,7 @@ class Observer(ABC):
         pass
 
 
-# Конкретный наблюдатель
+# Concrete observer
 class Subscriber(Observer):
 
     def __init__(self, name):
@@ -20,10 +20,10 @@ class Subscriber(Observer):
 
     def update(self, message):
         self.notifications.append(message)
-        print(f"[{self.name}] Получено уведомление: {message}")
+        print(f"[{self.name}] Отримано сповіщення: {message}")
 
 
-# Издатель уведомлений
+# Notification publisher
 class Publisher:
 
     def __init__(self):
@@ -33,27 +33,27 @@ class Publisher:
     def subscribe(self, subscriber):
         if subscriber not in self.subscribers:
             self.subscribers.append(subscriber)
-            print(f"Подписчик {subscriber.name} добавлен.")
+            print(f"Підписника {subscriber.name} додано.")
 
     def unsubscribe(self, subscriber):
         if subscriber in self.subscribers:
             self.subscribers.remove(subscriber)
-            print(f"Подписчик {subscriber.name} удалён.")
+            print(f"Підписника {subscriber.name} видалено.")
         else:
-            print("Такого подписчика нет.")
+            print("Такого підписника не існує.")
 
     def show_subscribers(self):
         if not self.subscribers:
-            print("Список подписчиков пуст.")
+            print("Список підписників порожній.")
             return
 
-        print("\nСписок подписчиков:")
+        print("\nСписок підписників:")
         for number, subscriber in enumerate(self.subscribers, 1):
             print(f"{number}. {subscriber.name}")
 
     def notify(self, message):
         if not self.subscribers:
-            print("Нет подписчиков для отправки уведомления.")
+            print("Немає підписників для надсилання сповіщення.")
             return
 
         self.history.append({
@@ -61,26 +61,26 @@ class Publisher:
             "date": datetime.now().strftime("%d.%m.%Y %H:%M:%S")
         })
 
-        print("\nРассылка уведомлений:")
+        print("\nРозсилання сповіщень:")
 
         for subscriber in self.subscribers:
             subscriber.update(message)
 
-        print("Рассылка завершена.")
+        print("Розсилання завершено.")
 
     def show_history(self):
         if not self.history:
-            print("История уведомлений пуста.")
+            print("Історія сповіщень порожня.")
             return
 
-        print("\nИстория уведомлений:")
+        print("\nІсторія сповіщень:")
 
         for number, notification in enumerate(self.history, 1):
             print(f"{number}. [{notification['date']}]")
             print(f"   {notification['message']}")
 
 
-# Основное приложение
+# Main application
 class NotificationApp:
 
     def __init__(self):
@@ -89,17 +89,17 @@ class NotificationApp:
     def run(self):
         while True:
             print("\n================================")
-            print("      СИСТЕМА УВЕДОМЛЕНИЙ")
+            print("       СИСТЕМА СПОВІЩЕНЬ")
             print("================================")
-            print("1. Добавить подписчика")
-            print("2. Удалить подписчика")
-            print("3. Показать подписчиков")
-            print("4. Опубликовать уведомление")
-            print("5. Показать историю уведомлений")
-            print("0. Выход")
+            print("1. Додати підписника")
+            print("2. Видалити підписника")
+            print("3. Показати список підписників")
+            print("4. Опублікувати сповіщення")
+            print("5. Показати історію сповіщень")
+            print("0. Вихід")
             print("================================")
 
-            choice = input("Выберите действие: ")
+            choice = input("Оберіть дію: ")
 
             if choice == "1":
                 self.add_subscriber()
@@ -117,17 +117,17 @@ class NotificationApp:
                 self.publisher.show_history()
 
             elif choice == "0":
-                print("Программа завершена.")
+                print("Програму завершено.")
                 break
 
             else:
-                print("Ошибка! Выберите пункт из меню.")
+                print("Помилка! Оберіть пункт із меню.")
 
     def add_subscriber(self):
-        name = input("Введите имя подписчика: ").strip()
+        name = input("Введіть ім'я підписника: ").strip()
 
         if not name:
-            print("Имя не может быть пустым.")
+            print("Ім'я не може бути порожнім.")
             return
 
         subscriber = Subscriber(name)
@@ -140,28 +140,29 @@ class NotificationApp:
             return
 
         try:
-            number = int(input("Введите номер подписчика: "))
+            number = int(input("Введіть номер підписника: "))
 
             if 1 <= number <= len(self.publisher.subscribers):
                 subscriber = self.publisher.subscribers[number - 1]
                 self.publisher.unsubscribe(subscriber)
             else:
-                print("Неверный номер.")
+                print("Неправильний номер.")
 
         except ValueError:
-            print("Введите целое число.")
+            print("Введіть ціле число.")
 
     def publish_notification(self):
-        message = input("Введите текст уведомления: ").strip()
+        message = input("Введіть текст сповіщення: ").strip()
 
         if not message:
-            print("Сообщение не может быть пустым.")
+            print("Повідомлення не може бути порожнім.")
             return
 
         self.publisher.notify(message)
 
 
-# Запуск программы
+# Application entry point
 if __name__ == "__main__":
     app = NotificationApp()
     app.run()
+
